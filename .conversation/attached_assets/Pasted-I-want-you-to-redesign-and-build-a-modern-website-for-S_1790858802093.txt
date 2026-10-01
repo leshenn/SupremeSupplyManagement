@@ -1,0 +1,571 @@
+I want you to redesign and build a modern website for **Supreme Supply Management**, a South African logistics and supply chain company.
+
+I have attached a Markdown file containing all the information extracted from their current website. Use that file as the **source of truth for the company information, services, contact details, projects, testimonials and other content**.
+
+Do not invent business facts that are not contained in the Markdown file.
+
+## Overall Design Direction
+
+I want the website to feel:
+
+- Minimal
+- Premium
+- Modern
+- Clean
+- Professional
+- High-end
+- Very easy to navigate
+
+Take visual inspiration from the **clean presentation style of Apple iPhone/product pages**, but do NOT copy Apple's website directly.
+
+Think:
+
+- Lots of whitespace
+- Large bold typography
+- Short sections
+- Strong visual hierarchy
+- Full-width sections
+- Large imagery
+- Smooth scrolling
+- Subtle animations
+- Minimal navigation
+- Premium transitions
+- Very little visual clutter
+
+The site should feel more like a modern technology/logistics company than a traditional freight-forwarding website.
+
+Avoid:
+
+- Huge blocks of text
+- Too many cards
+- Excessive gradients
+- Overuse of shadows
+- Busy layouts
+- Generic corporate blue template styling
+- Constant boxes around every piece of content
+- Stock-template appearance
+
+---
+
+# Website Structure
+
+Build a simple website with the following main navigation:
+
+- Home
+- About
+- Services
+- Projects
+- Contact
+
+Keep the navigation fixed/sticky at the top.
+
+Use the Supreme Supply Management logo if one is available in the existing assets.
+
+---
+
+# HOME PAGE
+
+## Hero
+
+Create a very clean full-screen or near-full-screen hero.
+
+Possible structure:
+
+Small eyebrow text:
+
+SUPREME SUPPLY MANAGEMENT
+
+Large headline:
+
+**Logistics without the complexity.**
+
+Supporting text explaining that Supreme Supply provides tailored end-to-end logistics and supply chain solutions across South Africa and internationally.
+
+Include two buttons:
+
+- Request a Quote
+- Explore Services
+
+Use a large logistics-related photograph or subtle background visual.
+
+The hero should feel premium and spacious rather than crowded.
+
+---
+
+# GLOBAL REACH SECTION
+
+Create a visually striking section showing the company's global network.
+
+Use the information from the Markdown file:
+
+- 250+ Offices
+- 120 Countries
+- 6 Continents
+
+Display these as very large numbers with minimal supporting text.
+
+Example aesthetic:
+
+250+
+Offices
+
+120
+Countries
+
+6
+Continents
+
+Do not put these inside generic cards.
+
+Use large typography and whitespace.
+
+---
+
+# INTRODUCTION
+
+Create a short section introducing Supreme Supply Management.
+
+Use the company information from the Markdown file.
+
+Emphasise:
+
+- Supply chain management
+- Freight forwarding
+- Imports and exports
+- Cross-border logistics
+- Warehousing and distribution
+- 20+ years of leadership experience
+- Personalised service
+
+Keep the copy concise.
+
+Include a link/button:
+
+**About Supreme Supply**
+
+---
+
+# SERVICES SECTION
+
+Create a beautiful scrolling services section.
+
+The five core services are:
+
+1. Sea Freight
+2. Air Freight
+3. Road Freight
+4. Warehousing
+5. Supply Chain Management
+
+Each service should have:
+
+- Service name
+- Short description
+- Relevant high-quality logistics image
+- A "Learn More" interaction or expandable content
+
+Do not display every detailed bullet point immediately.
+
+Keep the first view simple.
+
+When users click a service, either:
+
+- reveal more details smoothly,
+or
+- open a dedicated service detail section/page.
+
+Use the detailed service information from the attached Markdown file.
+
+---
+
+# SERVICE VISUAL STYLE
+
+The service sections can alternate image/text positioning.
+
+Example:
+
+SEA FREIGHT
+
+Large image left.
+
+Large heading and minimal text right.
+
+Next section:
+
+AIR FREIGHT
+
+Text left.
+
+Large image right.
+
+This should feel similar to a premium product storytelling page rather than a grid of small service cards.
+
+---
+
+# WHY SUPREME SUPPLY
+
+Create a section communicating the company's main strengths.
+
+Use information already present in the Markdown file, including:
+
+- Level 1 B-BBEE
+- Personalised service
+- One point of contact
+- Global network
+- Service focused
+- Online systems / tracking
+- More than 20 years of experience
+
+Do not use six tiny cards.
+
+Use either:
+
+- large typography,
+- a two-column layout,
+- or a clean scrolling feature layout.
+
+---
+
+# B-BBEE SECTION
+
+Include a premium, clean section highlighting:
+
+**Level 1 B-BBEE Contributor**
+
+Mention Supreme Supply's commitment to transformation and inclusive economic participation using the existing website content.
+
+Keep this section concise.
+
+Provide an optional:
+
+**View B-BBEE Certificate**
+
+button/link.
+
+---
+
+# PROJECTS
+
+Create a section titled something similar to:
+
+**Logistics in motion.**
+
+Use the project examples from the Markdown file.
+
+Include:
+
+- DSTV serialized product distribution into Africa
+- Great Wall of China advertising campaign across 30 countries
+- De Beers export and re-import project
+- Chip manufacturing plant relocation from Halifax, Canada to Johannesburg
+- Local manufacturer supply-chain contract
+- Worldwide import/export work
+
+Present these visually as case studies.
+
+Keep each case study short.
+
+Example:
+
+DE BEERS
+
+Export & Re-import Logistics
+
+Managed logistics requirements for a specialised international project.
+
+Avoid very large paragraphs.
+
+---
+
+# TESTIMONIAL
+
+Include the existing testimonial from:
+
+**Sindi Dlamini — CEO, Pamodzi Unique Engineering**
+
+Use a large elegant quote layout.
+
+Do not place it inside a generic review card.
+
+---
+
+# ABOUT PAGE / SECTION
+
+Use the information contained in the Markdown file.
+
+Explain:
+
+- Who Supreme Supply is
+- Mission
+- Experience
+- Approach to logistics
+- Technology and shipment tracking
+- Global connections
+- Personalised approach
+
+Turn the current image-based About Us information into proper HTML text.
+
+Do not recreate the old images containing text.
+
+---
+
+# CONTACT SECTION
+
+Create a clean closing section.
+
+Large heading:
+
+**Let's move something forward.**
+
+or similar.
+
+Include:
+
+Phone:
++27 010 824 0157
+
+Email:
+info@supremesupply.co.za
+
+Address:
+16 Vuurslag Avenue,
+Spartan,
+Kempton Park,
+1619
+
+Include a simple quote/contact form:
+
+- Name
+- Company
+- Email
+- Phone
+- Service required
+- Message
+
+Button:
+
+**Request a Quote**
+
+Also include the Supreme Supply LinkedIn link.
+
+Do NOT use the `supremeglobalsoft@gmail.com` email unless specifically required.
+
+---
+
+# FOOTER
+
+Keep the footer extremely simple.
+
+Include:
+
+Supreme Supply Management
+
+Services:
+- Sea Freight
+- Air Freight
+- Road Freight
+- Warehousing
+- Supply Chain Management
+
+Company:
+- About
+- Projects
+- Contact
+
+Contact information.
+
+LinkedIn.
+
+Use the current year dynamically rather than hardcoding 2024.
+
+---
+
+# IMAGES
+
+Use high-quality logistics imagery appropriate to each section, such as:
+
+Sea Freight:
+- container ships
+- shipping containers
+- ports
+
+Air Freight:
+- cargo aircraft
+- airport freight handling
+
+Road Freight:
+- professional freight trucks
+- Southern African transport routes
+
+Warehousing:
+- modern warehouses
+- organised logistics facilities
+
+Supply Chain:
+- supply chain/logistics operations
+- distribution facilities
+
+Avoid cheesy corporate stock photos of people shaking hands.
+
+Images should feel cinematic and premium.
+
+Use remote image URLs initially if appropriate, but structure the project so images can easily be replaced later.
+
+---
+
+# ANIMATION
+
+Use subtle animation only.
+
+Examples:
+
+- Text fades upward gently as sections enter the viewport
+- Images reveal smoothly
+- Number statistics animate when visible
+- Navigation changes slightly after scrolling
+- Buttons have subtle hover animations
+
+Do not add:
+
+- excessive parallax
+- spinning elements
+- flashy animations
+- constant moving backgrounds
+
+Animations should feel polished rather than distracting.
+
+---
+
+# COLOURS
+
+Use the company's existing branding/logo colours as the primary reference.
+
+Keep most backgrounds:
+
+- White
+- Off-white
+- Very light grey
+- Occasional dark sections for contrast
+
+Use the brand colour sparingly for:
+
+- Buttons
+- Highlights
+- Links
+- Small visual accents
+
+The website should not feel overly colourful.
+
+---
+
+# TYPOGRAPHY
+
+Use a modern sans-serif font.
+
+Suggested options:
+
+- Inter
+- Manrope
+- Plus Jakarta Sans
+
+Use:
+
+- Very large hero headings
+- Large section headings
+- Comfortable body text
+- Strong whitespace
+
+Avoid lots of different font weights and sizes.
+
+---
+
+# RESPONSIVENESS
+
+The site must work properly on:
+
+- Desktop
+- Laptop
+- Tablet
+- Mobile
+
+On mobile:
+
+- Keep typography strong but appropriately scaled
+- Stack image/text sections
+- Use a mobile navigation menu
+- Maintain generous spacing
+- Make buttons easy to tap
+
+---
+
+# TECHNICAL REQUIREMENTS
+
+Use:
+
+- React
+- Vite
+- Modern CSS
+- Reusable React components
+
+You may use Framer Motion for subtle animation if necessary.
+
+Keep the project structure clean.
+
+Example components:
+
+- Navbar
+- Hero
+- Stats
+- Intro
+- Services
+- ServiceSection
+- WhySupreme
+- BBBEESection
+- Projects
+- Testimonial
+- Contact
+- Footer
+
+Avoid unnecessary dependencies.
+
+---
+
+# IMPORTANT CONTENT RULES
+
+The attached Markdown file contains the existing website information.
+
+Use it as the content reference.
+
+Do not invent:
+
+- certifications
+- customer names
+- partnerships
+- statistics
+- office locations
+- awards
+- services
+
+If a claim in the Markdown file is uncertain, either leave it out or present it conservatively.
+
+Do not simply copy the structure of the existing website.
+
+The goal is to take the existing information and present it in a dramatically cleaner, simpler and more premium way.
+
+---
+
+# MOST IMPORTANT DESIGN PRINCIPLE
+
+Do not try to fit everything onto the screen at once.
+
+I want the user to scroll through the company story.
+
+Use:
+
+**large image → large statement → whitespace → next idea**
+
+rather than:
+
+**heading → 12 cards → 8 buttons → huge paragraph**
+
+The end result should feel like a premium modern brand website that happens to be for a logistics company.
