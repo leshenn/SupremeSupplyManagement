@@ -19,8 +19,9 @@ export async function Footer() {
           <div>
             <span>Explore</span>
             <Link href="/">Home</Link>
+            <Link href="/company">Company</Link>
             <Link href="/services">Services</Link>
-            <Link href="/projects">Projects</Link>
+            <Link href="/global-network">Global Network</Link>
             <Link href="/blog">Blog</Link>
           </div>
           <div>

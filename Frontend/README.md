@@ -1,96 +1,65 @@
-# Supreme Supply Management — Next.js + WordPress CMS
+# Supreme Supply Management — Next.js frontend
 
-This project is the current Supreme Supply Management Next.js frontend, connected to a small set of custom WordPress plugins so non-developers can manage Services, Projects, Testimonials, Blog Posts and Contact details from WordPress.
+This is the current Supreme Supply Management frontend. WordPress is used as the CMS and Next.js renders the public website.
 
-## 1. Install the WordPress plugins
+## Run locally
 
-The installable plugin ZIPs are inside `wordpress-plugin-zips/`.
-
-In WordPress go to **Plugins → Add New → Upload Plugin** and install/activate:
-
-1. `ssm-services.zip`
-2. `ssm-projects.zip`
-3. `ssm-testimonials.zip`
-4. `ssm-blog-api.zip`
-5. `ssm-contact-settings.zip`
-
-Services, Projects and Testimonials seed the current content the first time they are activated. Contact Settings starts with the current contact information. Blog uses normal WordPress **Posts**.
-
-## 2. WordPress admin areas
-
-After activation you will see:
-
-- **Services** — service title, short summary, detailed description, kicker and capability list.
-- **Projects** — project/client name, type, summary and expanded description.
-- **Testimonials** — client name, role, company and testimonial text.
-- **Posts** — normal WordPress blog posts. Featured images are optional and automatically feed the frontend hover/image treatment.
-- **Settings → SSM Contact** — phone, public email, quote email, office address, LinkedIn and Google Maps location.
-
-## 3. Connect Next.js to WordPress
-
-Copy `.env.example` to `.env.local` in the frontend root.
-
-For a local XAMPP WordPress install at `http://localhost/supreme-supply`:
+Create `.env.local` next to `package.json`:
 
 ```env
 WORDPRESS_URL=http://localhost/supreme-supply
 CMS_REVALIDATE_SECONDS=60
 ```
 
-If WordPress is at another local folder, change the URL. For production, use the live WordPress URL.
-
-## 4. Run the frontend
+Then run:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open the localhost address Next.js prints, usually `http://localhost:3000`.
+## Main routes
 
-## 5. REST endpoints used by the frontend
+```text
+/                 Home
+/company          Company / About Us
+/services         Services
+/global-network   Global Network
+/projects         Projects
+/blog             Blog
+/contact          Contact / quote request
+```
 
-- `/wp-json/ssm/v1/services`
-- `/wp-json/ssm/v1/projects`
-- `/wp-json/ssm/v1/testimonials`
-- `/wp-json/ssm/v1/posts`
-- `/wp-json/ssm/v1/posts/{slug}`
-- `/wp-json/ssm/v1/contact`
+`/about` now redirects to `/company`.
 
-The frontend fetches these server-side, so local development does not require browser CORS configuration.
+## WordPress REST endpoints
 
-## 6. Fallback behaviour
+```text
+/wp-json/ssm/v1/services
+/wp-json/ssm/v1/projects
+/wp-json/ssm/v1/testimonials
+/wp-json/ssm/v1/posts
+/wp-json/ssm/v1/posts/{slug}
+/wp-json/ssm/v1/contact
+/wp-json/ssm/v1/chatbot
+/wp-json/ssm/v1/company
+/wp-json/ssm/v1/global-network
+```
 
-If WordPress is offline or `WORDPRESS_URL` is not configured, the Next.js site falls back to the existing static/mock content. This makes local frontend development safe even when XAMPP is not running.
+## Current home page
 
-## Content flow
+The Home page contains:
 
-**WordPress admin → custom REST endpoints → Next.js pages**
+- hero;
+- concise Supreme introduction;
+- Personal Attention / Global Connections / Reliable Execution / Tailored Solutions block;
+- “Your Shipment, Made Simple.” four-step logistics journey;
+- final Request a quote CTA.
 
-- Service changes update `/services`.
-- Project changes update `/projects` and the project previews on Home.
-- The first testimonial controls the testimonial shown on Home.
-- Published WordPress posts update the Blog and Home blog preview.
-- Contact settings update the Contact page, quote email target and footer.
+Projects, testimonials and blog previews have intentionally been removed from Home. Projects and Blog remain available on their own pages.
 
-Next.js caches CMS responses for the number of seconds configured in `CMS_REVALIDATE_SECONDS`.
+## Company and Global Network CMS
 
-## Showcase update
+Install the supplied **SSM Company Page** and **SSM Global Network** WordPress plugins. Both ship with the approved copy preloaded and can be edited from WordPress without changing the frontend code.
 
-This revision includes:
-
-- a redesigned Blog index with one featured article plus a clean two-column article grid;
-- featured images for all local fallback posts;
-- a continuously moving horizontal testimonial carousel on the homepage;
-- support for all testimonials returned by the WordPress `/wp-json/ssm/v1/testimonials` endpoint;
-- fallback demo testimonials when WordPress is not connected.
-
-The populated CSV files are supplied separately in the Showcase CMS bundle. Some rows are intentionally mock/demo content and are clearly documented as such in the CSV README.
-
-## WordPress-controlled chatbot
-
-This build includes the SSM floating chatbot. Install and activate the `SSM Chatbot` WordPress plugin and manage the content under **Chatbot** in WordPress.
-
-REST endpoint: `/wp-json/ssm/v1/chatbot`
-
-The chatbot uses the existing `WORDPRESS_URL`. CMS requests have a 5-second timeout so an unavailable WordPress server will not indefinitely block the Next.js page render.
+If the new endpoints are temporarily unavailable, the frontend contains matching fallback copy so the pages still render during development.

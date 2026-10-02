@@ -1,6 +1,8 @@
 import { projects as fallbackProjects, services as fallbackServices, testimonials as fallbackTestimonials } from './site';
 import { getMockPost, mockPosts } from './blog';
 import { decodeHtml, decodeHtmlList } from './html';
+import { fallbackCompanyPage, type CompanyPageContent } from './company';
+import { fallbackGlobalNetworkPage, type GlobalNetworkPageContent } from './globalNetwork';
 
 const wordpressUrl = (process.env.WORDPRESS_URL || process.env.NEXT_PUBLIC_WORDPRESS_URL || '').replace(/\/$/, '');
 const revalidateSeconds = Number(process.env.CMS_REVALIDATE_SECONDS || 60);
@@ -231,3 +233,62 @@ export async function getChatbotConfig(): Promise<ChatbotConfig | null> {
   };
 }
 
+
+
+function splitParagraphs(value: unknown): string[] {
+  if (Array.isArray(value)) return value.map((item) => decodeHtml(String(item || ''))).filter(Boolean);
+  return String(value || '')
+    .split(/\n\s*\n/)
+    .map((item) => decodeHtml(item.trim()))
+    .filter(Boolean);
+}
+
+export async function getCompanyPage(): Promise<CompanyPageContent> {
+  const remote = await cmsFetch<Partial<CompanyPageContent>>('/wp-json/ssm/v1/company');
+  if (!remote) return fallbackCompanyPage;
+
+  const values = Array.isArray(remote.values) && remote.values.length
+    ? remote.values.map((value, index) => ({
+        number: decodeHtml(String(value?.number || String(index + 1).padStart(2, '0'))),
+        title: decodeHtml(String(value?.title || '')),
+        body: decodeHtml(String(value?.body || '')),
+      })).filter((value) => value.title)
+    : fallbackCompanyPage.values;
+
+  return {
+    heroTitle: decodeHtml(remote.heroTitle || fallbackCompanyPage.heroTitle),
+    heroIntro: decodeHtml(remote.heroIntro || fallbackCompanyPage.heroIntro),
+    aboutTitle: decodeHtml(remote.aboutTitle || fallbackCompanyPage.aboutTitle),
+    aboutParagraphs: splitParagraphs(remote.aboutParagraphs).length
+      ? splitParagraphs(remote.aboutParagraphs)
+      : fallbackCompanyPage.aboutParagraphs,
+    mission: decodeHtml(remote.mission || fallbackCompanyPage.mission),
+    vision: decodeHtml(remote.vision || fallbackCompanyPage.vision),
+    valuesTitle: decodeHtml(remote.valuesTitle || fallbackCompanyPage.valuesTitle),
+    valuesIntro: decodeHtml(remote.valuesIntro || fallbackCompanyPage.valuesIntro),
+    values,
+  };
+}
+
+export async function getGlobalNetworkPage(): Promise<GlobalNetworkPageContent> {
+  const remote = await cmsFetch<Partial<GlobalNetworkPageContent>>('/wp-json/ssm/v1/global-network');
+  if (!remote) return fallbackGlobalNetworkPage;
+
+  const sections = Array.isArray(remote.sections) && remote.sections.length
+    ? remote.sections.map((section, index) => ({
+        number: decodeHtml(String(section?.number || String(index + 1).padStart(2, '0'))),
+        title: decodeHtml(String(section?.title || '')),
+        paragraphs: splitParagraphs(section?.paragraphs),
+        bullets: Array.isArray(section?.bullets)
+          ? section.bullets.map((item) => decodeHtml(String(item || ''))).filter(Boolean)
+          : [],
+        closing: decodeHtml(String(section?.closing || '')),
+      })).filter((section) => section.title)
+    : fallbackGlobalNetworkPage.sections;
+
+  return {
+    heroTitle: decodeHtml(remote.heroTitle || fallbackGlobalNetworkPage.heroTitle),
+    heroIntro: decodeHtml(remote.heroIntro || fallbackGlobalNetworkPage.heroIntro),
+    sections,
+  };
+}

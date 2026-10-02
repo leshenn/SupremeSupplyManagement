@@ -1,16 +1,50 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { images } from '@/lib/site';
-import { getBlogPosts, getProjects, getTestimonials } from '@/lib/cms';
-import { TestimonialCarousel } from '@/components/TestimonialCarousel';
 
-export default async function HomePage() {
-  const [projects, testimonials, posts] = await Promise.all([
-    getProjects(),
-    getTestimonials(),
-    getBlogPosts(3),
-  ]);
+const principles = [
+  {
+    title: 'Personal Attention',
+    copy: 'Real relationships and dedicated support.',
+  },
+  {
+    title: 'Global Connections',
+    copy: 'Access to international logistics networks.',
+  },
+  {
+    title: 'Reliable Execution',
+    copy: 'Taking ownership from start to finish.',
+  },
+  {
+    title: 'Tailored Solutions',
+    copy: 'Logistics that work around your business.',
+  },
+];
 
+const shipmentSteps = [
+  {
+    number: '01',
+    title: 'Tell Us What You Need',
+    copy: 'Share your shipment details, origin, destination and requirements.',
+  },
+  {
+    number: '02',
+    title: 'We Build Your Solution',
+    copy: 'Our team assesses your requirements and coordinates a suitable logistics solution.',
+  },
+  {
+    number: '03',
+    title: 'We Coordinate the Journey',
+    copy: 'From freight arrangements and customs clearance to transportation and delivery, we manage the moving parts.',
+  },
+  {
+    number: '04',
+    title: 'Delivered with Care',
+    copy: 'We remain involved throughout the process, keeping you informed and your business moving.',
+  },
+];
+
+export default function HomePage() {
   return (
     <>
       <section className="home-hero home-hero-full">
@@ -38,82 +72,53 @@ export default async function HomePage() {
             <h2>One point of contact for a complex supply chain.</h2>
           </div>
           <div className="body-copy">
-            <p>Supreme Supply is a high-end supply chain management company and a local and international freight forwarder. We provide personalised, high-quality and cost-effective end-to-end logistics solutions.</p>
-            <p>Our approach is built around foresight, open communication and regular shipment updates. With more than 20 years of leadership experience, we continuously improve processes and systems to support efficient workflows, reliable delivery and clear tracking from origin to destination.</p>
+            <p>In a world of complex supply chains, we believe logistics should feel straightforward.</p>
+            <p>At Supreme, you're more than a shipment number. We take the time to understand your requirements, stay involved throughout the process and find solutions that work for your business.</p>
           </div>
         </div>
 
-        <div className="shell stats-row stats-row-soft">
-          <div><strong>250+</strong><span>Offices in the collaboration network</span></div>
-          <div><strong>120</strong><span>Countries</span></div>
-          <div><strong>6</strong><span>Continents</span></div>
-          <div><strong>20+</strong><span>Years of leadership experience</span></div>
+        <div className="shell stats-row stats-row-soft home-principles-row">
+          {principles.map((item) => (
+            <div key={item.title}>
+              <strong>{item.title}</strong>
+              <span>{item.copy}</span>
+            </div>
+          ))}
         </div>
       </section>
 
-      <section className="section section-tint home-projects-preview">
+      <section className="section shipment-steps-section">
         <div className="shell">
-          <div className="section-heading split-heading">
-            <div>
-              <span className="eyebrow">Selected experience</span>
-              <h2>Work shaped around the movement.</h2>
-            </div>
-            <Link className="text-link" href="/projects">Explore projects <ArrowRight size={15} /></Link>
+          <div className="shipment-steps-heading">
+            <span className="eyebrow">How it works</span>
+            <h2>Your Shipment, Made Simple.</h2>
           </div>
 
-          <div className="home-project-list">
-            {projects.slice(0, 3).map((project, index) => (
-              <Link
-                className="home-project-row clickable-block"
-                href={`/projects#${project.slug || `project-${index + 1}`}`}
-                key={project.id || project.slug || project.client}
-                aria-label={`View ${project.client} project details`}
-              >
-                <div className="home-project-row-copy">
-                  <span className="home-project-meta">0{index + 1} · {project.type}</span>
-                  <h3>{project.client}</h3>
-                  <p>{project.summary}</p>
+          <div className="shipment-route" aria-label="Four steps from shipment requirement to delivery">
+            {shipmentSteps.map((step) => (
+              <article className="shipment-step" key={step.number}>
+                <div className="shipment-step-marker" aria-hidden="true">
+                  <span>{step.number}</span>
                 </div>
-                <span className="home-project-arrow" aria-hidden="true"><ArrowRight size={13} /></span>
-              </Link>
+                <div className="shipment-step-copy">
+                  <h3>{step.title}</h3>
+                  <p>{step.copy}</p>
+                </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <TestimonialCarousel testimonials={testimonials} />
-
-      <section className="section blog-preview-section blog-preview-soft">
-        <div className="shell">
-          <div className="section-heading split-heading">
-            <div>
-              <span className="eyebrow">Insights</span>
-              <h2>From the blog.</h2>
-            </div>
-            <Link className="text-link" href="/blog">View all posts <ArrowRight size={15} /></Link>
+      <section className="home-quote-cta">
+        <div className="shell home-quote-cta-inner">
+          <div>
+            <span className="eyebrow light">Ready when you are</span>
+            <h2>Have a shipment in mind?</h2>
           </div>
-
-          <div className="blog-list-home">
-            {posts.map((post) => (
-              <Link
-                className={post.image ? 'home-blog-row has-hover-image clickable-block' : 'home-blog-row clickable-block'}
-                href={`/blog/${post.slug}`}
-                key={post.id || post.slug}
-                aria-label={`Read ${post.title}`}
-              >
-                {post.image && (
-                  <div className="blog-hover-visual home-blog-hover-visual" aria-hidden="true">
-                    <img src={post.image} alt="" />
-                  </div>
-                )}
-                <div className="home-blog-copy">
-                  <span>{new Date(post.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                  <h3>{post.title}</h3>
-                  <p>{post.excerpt}</p>
-                </div>
-                <span className="home-blog-arrow" aria-hidden="true"><ArrowRight size={13} /></span>
-              </Link>
-            ))}
+          <div className="home-quote-actions">
+            <Link className="button button-white" href="/contact">Request a quote <ArrowRight size={16} /></Link>
+            <Link className="button button-ghost-light" href="/services">View our services <ArrowRight size={16} /></Link>
           </div>
         </div>
       </section>
