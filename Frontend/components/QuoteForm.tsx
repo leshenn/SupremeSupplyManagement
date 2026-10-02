@@ -20,6 +20,10 @@ export function QuoteForm({ services, quoteEmail }: QuoteFormProps) {
       setMessage('Please complete your name, email and message.');
       return;
     }
+    if (!quoteEmail) {
+      setMessage('The contact email is not configured yet. Please try again once it has been added in WordPress.');
+      return;
+    }
     const subject = encodeURIComponent(`Quote request — ${name}`);
     const body = encodeURIComponent([
       `Name: ${name}`,

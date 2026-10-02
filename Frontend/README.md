@@ -86,3 +86,11 @@ This revision includes:
 - fallback demo testimonials when WordPress is not connected.
 
 The populated CSV files are supplied separately in the Showcase CMS bundle. Some rows are intentionally mock/demo content and are clearly documented as such in the CSV README.
+
+## WordPress-controlled chatbot
+
+This build includes the SSM floating chatbot. Install and activate the `SSM Chatbot` WordPress plugin and manage the content under **Chatbot** in WordPress.
+
+REST endpoint: `/wp-json/ssm/v1/chatbot`
+
+The chatbot uses the existing `WORDPRESS_URL`. CMS requests have a 5-second timeout so an unavailable WordPress server will not indefinitely block the Next.js page render.

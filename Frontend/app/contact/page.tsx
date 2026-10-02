@@ -7,7 +7,10 @@ export const metadata: Metadata = { title: 'Contact' };
 
 export default async function ContactPage() {
   const [contact, services] = await Promise.all([getContactSettings(), getServices()]);
-  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(contact.mapQuery || contact.address)}&z=15&output=embed`;
+  const mapLocation = contact.mapQuery || contact.address;
+  const mapSrc = mapLocation
+    ? `https://www.google.com/maps?q=${encodeURIComponent(mapLocation)}&z=15&output=embed`
+    : '';
 
   return (
     <>
@@ -20,22 +23,32 @@ export default async function ContactPage() {
       <section className="section contact-section">
         <div className="shell contact-grid">
           <div className="contact-details">
-            <div><span>Phone</span><a href={`tel:${contact.phone.replace(/\s/g, '')}`}>{contact.phone}</a></div>
-            <div><span>Email</span><a href={`mailto:${contact.email}`}>{contact.email}</a></div>
-            <div className="office-block">
-              <span>Office</span>
-              <p>{contact.address}</p>
-              <div className="office-map" aria-label="Map showing the Supreme Supply Management office">
-                <iframe
-                  title="Supreme Supply Management office map"
-                  src={mapSrc}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  allowFullScreen
-                />
+            {contact.phone && (
+              <div><span>Phone</span><a href={`tel:${contact.phone.replace(/\s/g, '')}`}>{contact.phone}</a></div>
+            )}
+            {contact.email && (
+              <div><span>Email</span><a href={`mailto:${contact.email}`}>{contact.email}</a></div>
+            )}
+            {(contact.address || mapSrc) && (
+              <div className="office-block">
+                <span>Office</span>
+                {contact.address && <p>{contact.address}</p>}
+                {mapSrc && (
+                  <div className="office-map" aria-label="Map showing the Supreme Supply Management office">
+                    <iframe
+                      title="Supreme Supply Management office map"
+                      src={mapSrc}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      allowFullScreen
+                    />
+                  </div>
+                )}
               </div>
-            </div>
-            <div><span>LinkedIn</span><a href={contact.linkedin} target="_blank" rel="noreferrer">Supreme Supply Management</a></div>
+            )}
+            {contact.linkedin && (
+              <div><span>LinkedIn</span><a href={contact.linkedin} target="_blank" rel="noreferrer">Supreme Supply Management</a></div>
+            )}
           </div>
           <QuoteForm services={services.map((service) => service.title)} quoteEmail={contact.quoteEmail} />
         </div>

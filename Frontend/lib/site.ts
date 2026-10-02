@@ -2,10 +2,6 @@ export const brand = {
   name: 'Supreme Supply Management',
   shortName: 'Supreme Supply',
   blue: '#0a2c74',
-  phone: '+27 010 824 0157',
-  email: 'info@supremesupply.co.za',
-  address: '16 Vuurslag Avenue, Spartan, Kempton Park, 1619',
-  linkedin: 'https://www.linkedin.com/company/supreme-supply-management/',
 };
 
 export const images = {

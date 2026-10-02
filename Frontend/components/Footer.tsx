@@ -25,15 +25,21 @@ export async function Footer() {
           </div>
           <div>
             <span>Contact</span>
-            <a href={`tel:${contact.phone.replace(/\s/g, '')}`}>{contact.phone}</a>
-            <a href={`mailto:${contact.email}`}>{contact.email}</a>
-            <a href={contact.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+            {contact.phone && (
+              <a href={`tel:${contact.phone.replace(/\s/g, '')}`}>{contact.phone}</a>
+            )}
+            {contact.email && (
+              <a href={`mailto:${contact.email}`}>{contact.email}</a>
+            )}
+            {contact.linkedin && (
+              <a href={contact.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+            )}
           </div>
         </div>
       </div>
       <div className="shell footer-base">
         <span>© {new Date().getFullYear()} Supreme Supply Management</span>
-        <span>{contact.address}</span>
+        {contact.address && <span>{contact.address}</span>}
       </div>
     </footer>
   );

@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { Chatbot } from '@/components/Chatbot';
+import { getChatbotConfig } from '@/lib/cms';
 
 export const metadata: Metadata = {
   title: {
@@ -11,13 +13,16 @@ export const metadata: Metadata = {
   description: 'Personalised, end-to-end logistics and supply chain solutions across South Africa and international markets.',
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const chatbot = await getChatbotConfig();
+
   return (
     <html lang="en">
       <body>
         <Header />
         <main>{children}</main>
         <Footer />
+        {chatbot && <Chatbot config={chatbot} />}
       </body>
     </html>
   );
