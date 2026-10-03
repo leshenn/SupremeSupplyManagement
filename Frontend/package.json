@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "install-dev": "npm install --include=dev"
   },
   "dependencies": {
     "lucide-react": "^0.545.0",
