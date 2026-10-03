@@ -40,6 +40,7 @@ export async function Footer() {
       </div>
       <div className="shell footer-base">
         <span>© {new Date().getFullYear()} Supreme Supply Management</span>
+        <Link className="footer-legal-link" href="/privacy">Privacy Policy</Link>
         {contact.address && <span>{contact.address}</span>}
       </div>
     </footer>

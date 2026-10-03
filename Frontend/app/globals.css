@@ -1782,7 +1782,7 @@ h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; }
   margin: 0;
   max-width: 650px;
   color: #5e6877;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.65;
 }
 
@@ -3207,5 +3207,304 @@ h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; }
 @media (max-width: 660px) {
   .services-request-cta {
     padding: 44px 0;
+  }
+}
+/* 2026-10 site-wide readability + typography consistency */
+:root {
+  --copy-size: 17px;
+  --copy-line: 1.72;
+  --label-size: 12px;
+}
+
+/* Keep all normal reading copy on one clear sans-serif system. */
+p,
+li {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: var(--copy-size) !important;
+  font-weight: 400 !important;
+  line-height: var(--copy-line) !important;
+}
+
+/* Shared small labels / eyebrow copy: still secondary, but no longer tiny. */
+.eyebrow,
+.home-hero-content .hero-eyebrow,
+.accordion-heading small,
+.accordion-label,
+.service-title-block small,
+.service-detail-title small,
+.project-row small,
+.contact-details span,
+.footer-links span {
+  font-size: var(--label-size) !important;
+  line-height: 1.45 !important;
+}
+
+/* Small metadata stays visually secondary, while remaining readable. */
+.accordion-number,
+.service-number,
+.service-detail-title > span,
+.project-row > span,
+.blog-card-meta,
+.blog-row > span,
+.project-preview > span,
+.value-cards span,
+.company-value-number,
+.network-story-number {
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+}
+
+/* Main supporting copy below headings follows the same readable scale. */
+.home-hero-content p,
+.page-hero p,
+.body-copy p,
+.home-principles-row span,
+.shipment-step p,
+.info-accordion summary > p,
+.accordion-preview,
+.accordion-copy p,
+.service-summary-block p,
+.project-row p,
+.blog-row p,
+.blog-card-body p,
+.company-about-body p,
+.company-value-row p,
+.network-story-copy p,
+.network-capabilities li,
+.wp-content,
+.contact-details p {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: var(--copy-size) !important;
+  font-weight: 400 !important;
+  line-height: var(--copy-line) !important;
+}
+
+/* Compact list/chip text can remain a touch smaller than long-form copy. */
+.capability-chips li,
+.service-summary-block span {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+}
+
+/* Contact links are body information rather than display typography. */
+.contact-details a {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: var(--copy-size) !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+}
+
+/* Form text and navigation stay compact but comfortably readable. */
+.nav-links a {
+  font-size: 14px;
+}
+.nav-contact,
+.button {
+  font-size: 13px;
+}
+.quote-form label {
+  font-size: 13px;
+  line-height: 1.45;
+}
+.quote-form input,
+.quote-form select,
+.quote-form textarea {
+  font-size: 16px;
+}
+.form-message {
+  font-size: 14px;
+}
+
+/* Footer gets a readability lift without competing with page content. */
+.footer-intro p {
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+}
+.footer-links a {
+  font-size: 14px;
+  line-height: 1.55;
+}
+.footer-base {
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+/* Global Network closing lines use the same body face/size, with bold emphasis only. */
+.network-closing {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: var(--copy-size) !important;
+  font-weight: 700 !important;
+  line-height: var(--copy-line) !important;
+  letter-spacing: 0 !important;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --copy-size: 16px;
+    --label-size: 12px;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+  }
+}
+
+/* 2026-10 readability refinement + privacy policy */
+:root {
+  --copy-size: 18px;
+  --copy-line: 1.72;
+  --label-size: 13px;
+}
+
+/* Services descriptions follow the same reading scale as the rest of the site. */
+.info-accordion summary > p,
+.accordion-preview,
+.accordion-copy p,
+.service-summary-block p {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: var(--copy-size) !important;
+  font-weight: 400 !important;
+  line-height: var(--copy-line) !important;
+}
+
+.capability-chips li,
+.service-summary-block span {
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+}
+
+/* Global Network closing copy keeps the emphasis without changing type colour. */
+.network-closing {
+  color: #555f70 !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: var(--copy-size) !important;
+  font-weight: 700 !important;
+  line-height: var(--copy-line) !important;
+}
+
+/* Give supporting and footer text a small additional readability lift. */
+.footer-intro p {
+  font-size: 16px !important;
+}
+.footer-links a {
+  font-size: 15px;
+}
+.footer-base {
+  font-size: 13px;
+}
+.footer-legal-link {
+  color: #536071;
+}
+.footer-legal-link:hover {
+  color: var(--blue);
+}
+
+/* Privacy policy */
+.privacy-section {
+  padding-top: 76px;
+}
+.privacy-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 760px);
+  gap: 86px;
+  align-items: start;
+  justify-content: start;
+}
+.privacy-aside {
+  position: sticky;
+  top: 112px;
+}
+.privacy-aside .eyebrow {
+  margin-bottom: 10px;
+}
+.privacy-aside p {
+  margin: 0;
+  color: #667085;
+}
+.privacy-content {
+  max-width: 760px;
+}
+.privacy-content section {
+  margin-bottom: 52px;
+}
+.privacy-content section:last-child {
+  margin-bottom: 0;
+}
+.privacy-content h2 {
+  margin: 0 0 18px;
+  color: var(--blue);
+  font-size: clamp(28px, 3vw, 36px);
+  line-height: 1.08;
+  letter-spacing: -.025em;
+}
+.privacy-content p,
+.privacy-content li {
+  color: #555f70;
+}
+.privacy-content ul {
+  margin: 0 0 22px;
+  padding-left: 22px;
+}
+.privacy-content li {
+  margin-bottom: 8px;
+}
+.privacy-content a {
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.privacy-contact {
+  margin-top: 26px;
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+  background: var(--blue-soft);
+}
+.privacy-contact > div {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+.privacy-contact span {
+  color: #7a8492;
+  font-size: var(--label-size);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.privacy-contact p,
+.privacy-contact a {
+  margin: 0;
+  color: #555f70;
+  text-decoration: none;
+}
+
+@media (max-width: 820px) {
+  .privacy-layout {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+  .privacy-aside {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --copy-size: 17px;
+    --label-size: 13px;
+  }
+  .privacy-section {
+    padding-top: 54px;
+  }
+  .privacy-content section {
+    margin-bottom: 42px;
+  }
+  .privacy-contact > div {
+    grid-template-columns: 1fr;
+    gap: 4px;
   }
 }
