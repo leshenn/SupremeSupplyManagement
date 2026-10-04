@@ -5,7 +5,7 @@ import type { GlobalNetworkPageContent } from './globalNetwork';
 const wordpressUrl = (
   process.env.WORDPRESS_URL ||
   process.env.NEXT_PUBLIC_WORDPRESS_URL ||
-  ''
+  'https://cms.supremesupply.co.za'
 ).replace(/\/+$/, '');
 
 const revalidateSeconds = Number(
