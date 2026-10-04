@@ -131,26 +131,14 @@ jobs:
           test -f "$APP/.next/BUILD_ID"
           find "$APP/.next/static/css" -type f
 
-          echo "Stopping old Passenger process..."
+          echo "Restarting cPanel Node.js application..."
 
-          PIDS=$(pgrep -f '^lsnode:/home/sjiolccb/repositories/SupremeSupplyManagement/Frontend/$' || true)
+          cloudlinux-selector restart \
+            --json \
+            --interpreter nodejs \
+            --app-root repositories/SupremeSupplyManagement/Frontend
 
-          if [ -n "$PIDS" ]; then
-            echo "Stopping PIDs: $PIDS"
-            kill $PIDS || true
-            sleep 3
-          fi
-
-          PIDS=$(pgrep -f '^lsnode:/home/sjiolccb/repositories/SupremeSupplyManagement/Frontend/$' || true)
-
-          if [ -n "$PIDS" ]; then
-            echo "Force stopping PIDs: $PIDS"
-            kill -9 $PIDS || true
-          fi
-
-          echo "Triggering Passenger restart..."
-          mkdir -p "$APP/tmp"
-          touch "$APP/tmp/restart.txt"
+          echo "Application restarted."
 
           echo "Deployment complete."
           EOF
