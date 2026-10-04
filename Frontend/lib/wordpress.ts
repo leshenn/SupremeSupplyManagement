@@ -11,7 +11,7 @@ export type WordPressPost = {
   };
 };
 
-const baseUrl = (process.env.WORDPRESS_URL || process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://supremesupply.co.za').replace(/\/$/, '');
+const baseUrl = (process.env.WORDPRESS_URL || process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://cms.supremesupply.co.za').replace(/\/$/, '');
 
 export async function getPosts(limit = 12): Promise<WordPressPost[]> {
   try {
