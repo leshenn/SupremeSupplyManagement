@@ -88,6 +88,7 @@ jobs:
           APP="$REPO/Frontend"
           ARCHIVE="/home/sjiolccb/supreme-next-build.tar.gz"
           STAGE="/home/sjiolccb/supreme-deploy-stage"
+          PROCESS_PATTERN="lsnode:/home/sjiolccb/repositories/SupremeSupplyManagement/Frontend/"
 
           echo "Updating source code..."
           cd "$REPO"
@@ -114,40 +115,45 @@ jobs:
           echo "New build ID:"
           cat "$STAGE/.next/BUILD_ID"
 
-          echo "Stopping cPanel Node.js application..."
+          echo "Stopping CloudLinux Node application..."
 
           cloudlinux-selector stop \
             --json \
             --interpreter nodejs \
-            --app-root repositories/SupremeSupplyManagement/Frontend
+            --app-root repositories/SupremeSupplyManagement/Frontend \
+            || true
 
-          echo "Waiting for old Passenger process to disappear..."
+          sleep 2
 
-          for i in {1..10}; do
-            if ! pgrep -f '^lsnode:/home/sjiolccb/repositories/SupremeSupplyManagement/Frontend/$' >/dev/null; then
-              echo "Passenger process stopped."
-              break
-            fi
+          echo "Checking for surviving Passenger process..."
 
-            echo "Old process still running..."
-            sleep 2
-          done
-
-          PIDS=$(pgrep -f '^lsnode:/home/sjiolccb/repositories/SupremeSupplyManagement/Frontend/$' || true)
+          PIDS=$(pgrep -f "$PROCESS_PATTERN" || true)
 
           if [ -n "$PIDS" ]; then
-            echo "Force stopping old Passenger process: $PIDS"
+            echo "Old Passenger process still running: $PIDS"
+            echo "Stopping it..."
+
             kill $PIDS || true
             sleep 3
           fi
 
-          PIDS=$(pgrep -f '^lsnode:/home/sjiolccb/repositories/SupremeSupplyManagement/Frontend/$' || true)
+          PIDS=$(pgrep -f "$PROCESS_PATTERN" || true)
 
           if [ -n "$PIDS" ]; then
-            echo "Force killing stubborn process: $PIDS"
+            echo "Process still alive. Force killing: $PIDS"
+
             kill -9 $PIDS || true
             sleep 2
           fi
+
+          PIDS=$(pgrep -f "$PROCESS_PATTERN" || true)
+
+          if [ -n "$PIDS" ]; then
+            echo "ERROR: Could not stop old Passenger process."
+            exit 1
+          fi
+
+          echo "Old Passenger process is gone."
 
           echo "Replacing production .next..."
 
@@ -159,25 +165,34 @@ jobs:
 
           mv "$STAGE/.next" "$APP/.next"
 
+          echo "Clearing runtime caches..."
+
+          rm -rf "$APP/.next/server/route-cache"
+          rm -rf "$APP/.next/cache"
+
           rm -rf "$STAGE"
           rm -f "$ARCHIVE"
 
-          echo "Verifying deployed files..."
+          echo "Verifying deployed build..."
+
           test -f "$APP/.next/BUILD_ID"
 
           echo "Deployed build ID:"
           cat "$APP/.next/BUILD_ID"
 
-          find "$APP/.next/static/css" -type f
-
-          echo "Starting cPanel Node.js application..."
+          echo "Starting CloudLinux Node application..."
 
           cloudlinux-selector start \
             --json \
             --interpreter nodejs \
             --app-root repositories/SupremeSupplyManagement/Frontend
 
-          echo "Application started."
+          echo "Waiting for application to start..."
+          sleep 5
+
+          echo "Current Passenger process:"
+          pgrep -af "$PROCESS_PATTERN" || true
+
           echo "Deployment complete."
           EOF
 
@@ -196,7 +211,7 @@ jobs:
 
             HTML=$(curl -fsS \
               -H "Cache-Control: no-cache" \
-              "https://supremesupply.co.za/?deploy-check=${BUILD_ID}-${attempt}" \
+              "https://supremesupply.co.za/?deploy-check=${BUILD_ID}-${attempt}-$(date +%s)" \
               || true)
 
             if printf '%s' "$HTML" | grep -q "$BUILD_ID"; then
@@ -209,13 +224,13 @@ jobs:
               echo "Live CSS: $CSS"
 
               if [ -z "$CSS" ]; then
-                echo "No CSS file found in live HTML."
+                echo "ERROR: No CSS file found."
                 exit 1
               fi
 
               curl -fsSI "https://supremesupply.co.za$CSS"
 
-              echo "Deployment verified successfully."
+              echo "Removing backup build..."
 
               ssh \
                 -i ~/.ssh/supreme_deploy \
@@ -223,7 +238,16 @@ jobs:
                 "${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}" \
                 "rm -rf /home/sjiolccb/repositories/SupremeSupplyManagement/Frontend/.next.old"
 
+              echo "Deployment verified successfully."
               exit 0
+            fi
+
+            echo "New build not live yet. Waiting 5 seconds..."
+            sleep 5
+          done
+
+          echo "ERROR: New build exists on cPanel but is not being served."
+          exit 1
             fi
 
             echo "Old build still responding. Waiting 5 seconds..."
