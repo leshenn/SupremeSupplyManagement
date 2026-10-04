@@ -424,6 +424,25 @@ h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; }
 }
 
 /* Mobile */
+
+/* Contact navigation behaviour */
+
+.mobile-contact-link {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  /* Hide the separate desktop contact button */
+  .nav-contact {
+    display: none;
+  }
+
+  /* Show Contact inside the hamburger menu */
+  .mobile-contact-link {
+    display: block;
+  }
+}
+
 @media (max-width: 760px) {
   .shell { width: min(var(--max), calc(100% - 30px)); }
   .nav-shell { min-height: 66px; }
