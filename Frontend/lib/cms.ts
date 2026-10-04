@@ -24,7 +24,7 @@ async function cmsFetch<T>(path: string): Promise<T | null> {
           ? revalidateSeconds
           : 60,
       },
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(30000),
     });
 
     if (!response.ok) {
