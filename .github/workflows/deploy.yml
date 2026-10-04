@@ -1,0 +1,149 @@
+name: Deploy Supreme Supply
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: supreme-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      WORDPRESS_URL: ${{ vars.WORDPRESS_URL }}
+      CMS_REVALIDATE_SECONDS: ${{ vars.CMS_REVALIDATE_SECONDS }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: Frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: Frontend
+        run: npm ci
+
+      - name: Build Next.js
+        working-directory: Frontend
+        run: npm run build
+
+      - name: Verify build
+        working-directory: Frontend
+        run: |
+          test -f .next/BUILD_ID
+          test -d .next/static
+          echo "Build ID:"
+          cat .next/BUILD_ID
+          echo "CSS:"
+          find .next/static/css -type f
+
+      - name: Package build
+        working-directory: Frontend
+        run: tar -czf next-build.tar.gz .next
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+
+          printf '%s\n' "${{ secrets.CPANEL_SSH_KEY }}" > ~/.ssh/supreme_deploy
+          chmod 600 ~/.ssh/supreme_deploy
+
+          ssh-keyscan -p "${{ secrets.CPANEL_PORT }}" "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Upload production build
+        run: |
+          scp \
+            -i ~/.ssh/supreme_deploy \
+            -P "${{ secrets.CPANEL_PORT }}" \
+            Frontend/next-build.tar.gz \
+            "${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}:/home/sjiolccb/supreme-next-build.tar.gz"
+
+      - name: Deploy on cPanel
+        run: |
+          ssh \
+            -i ~/.ssh/supreme_deploy \
+            -p "${{ secrets.CPANEL_PORT }}" \
+            "${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}" \
+            'bash -s' <<'EOF'
+
+          set -e
+
+          REPO="/home/sjiolccb/repositories/SupremeSupplyManagement"
+          APP="$REPO/Frontend"
+
+          echo "Updating source code..."
+          cd "$REPO"
+
+          git fetch origin main
+          git reset --hard "${{ github.sha }}"
+
+          echo "Stopping stale Supreme Supply Node process..."
+
+          PIDS=$(pgrep -f '^lsnode:/home/sjiolccb/repositories/SupremeSupplyManagement/Frontend/$' || true)
+
+          if [ -n "$PIDS" ]; then
+            kill $PIDS || true
+            sleep 3
+          fi
+
+          PIDS=$(pgrep -f '^lsnode:/home/sjiolccb/repositories/SupremeSupplyManagement/Frontend/$' || true)
+
+          if [ -n "$PIDS" ]; then
+            kill -9 $PIDS || true
+          fi
+
+          cd "$APP"
+
+          echo "Activating Node environment..."
+          source /home/sjiolccb/nodevenv/repositories/SupremeSupplyManagement/Frontend/22/bin/activate
+
+          echo "Installing production dependencies..."
+          npm install --omit=dev
+
+          echo "Replacing production build..."
+          rm -rf .next
+          tar -xzf /home/sjiolccb/supreme-next-build.tar.gz
+          rm -f /home/sjiolccb/supreme-next-build.tar.gz
+
+          echo "Verifying deployed build..."
+          test -f .next/BUILD_ID
+          find .next/static/css -type f
+
+          echo "Restarting Passenger..."
+          mkdir -p tmp
+          touch tmp/restart.txt
+
+          echo "Deployment complete."
+          EOF
+
+      - name: Wait for application
+        run: sleep 15
+
+      - name: Verify live website
+        run: |
+          HTML=$(curl -fsS https://supremesupply.co.za)
+
+          CSS=$(printf '%s' "$HTML" \
+            | grep -o '/_next/static/css/[^"]*' \
+            | head -1)
+
+          echo "Live CSS file: $CSS"
+
+          if [ -z "$CSS" ]; then
+            echo "No CSS reference found in live HTML."
+            exit 1
+          fi
+
+          curl -fsSI "https://supremesupply.co.za$CSS"
+
+          echo "Supreme Supply deployment passed."
