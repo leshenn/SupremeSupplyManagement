@@ -41,8 +41,10 @@ jobs:
         run: |
           test -f .next/BUILD_ID
           test -d .next/static
+
           echo "Build ID:"
           cat .next/BUILD_ID
+
           echo "CSS:"
           find .next/static/css -type f
 
@@ -57,7 +59,11 @@ jobs:
           printf '%s\n' "${{ secrets.CPANEL_SSH_KEY }}" > ~/.ssh/supreme_deploy
           chmod 600 ~/.ssh/supreme_deploy
 
-          ssh-keyscan -p "${{ secrets.CPANEL_PORT }}" "${{ secrets.CPANEL_HOST }}" >> ~/.ssh/known_hosts
+          ssh-keyscan \
+            -p "${{ secrets.CPANEL_PORT }}" \
+            "${{ secrets.CPANEL_HOST }}" \
+            >> ~/.ssh/known_hosts
+
           chmod 600 ~/.ssh/known_hosts
 
       - name: Upload production build
@@ -80,6 +86,8 @@ jobs:
 
           REPO="/home/sjiolccb/repositories/SupremeSupplyManagement"
           APP="$REPO/Frontend"
+          ARCHIVE="/home/sjiolccb/supreme-next-build.tar.gz"
+          STAGE="/home/sjiolccb/supreme-deploy-stage"
 
           echo "Updating source code..."
           cd "$REPO"
@@ -87,11 +95,48 @@ jobs:
           git fetch origin main
           git reset --hard "${{ github.sha }}"
 
-          echo "Stopping stale Supreme Supply Node process..."
+          echo "Activating Node environment..."
+          source /home/sjiolccb/nodevenv/repositories/SupremeSupplyManagement/Frontend/22/bin/activate
+
+          echo "Installing production dependencies..."
+          cd "$APP"
+          npm install --omit=dev
+
+          echo "Preparing new build..."
+          rm -rf "$STAGE"
+          mkdir -p "$STAGE"
+
+          tar -xzf "$ARCHIVE" -C "$STAGE"
+
+          echo "Checking new build..."
+          test -f "$STAGE/.next/BUILD_ID"
+
+          echo "New build ID:"
+          cat "$STAGE/.next/BUILD_ID"
+
+          echo "Replacing production .next..."
+
+          rm -rf "$APP/.next.old"
+
+          if [ -d "$APP/.next" ]; then
+            mv "$APP/.next" "$APP/.next.old"
+          fi
+
+          mv "$STAGE/.next" "$APP/.next"
+
+          rm -rf "$STAGE"
+          rm -f "$ARCHIVE"
+
+          echo "Verifying deployed files..."
+          test -f "$APP/.next/BUILD_ID"
+          find "$APP/.next/static/css" -type f
+
+          echo "Stopping old Passenger process..."
 
           PIDS=$(pgrep -f '^lsnode:/home/sjiolccb/repositories/SupremeSupplyManagement/Frontend/$' || true)
 
           if [ -n "$PIDS" ]; then
+            echo "Stopping PIDs: $PIDS"
             kill $PIDS || true
             sleep 3
           fi
@@ -99,51 +144,63 @@ jobs:
           PIDS=$(pgrep -f '^lsnode:/home/sjiolccb/repositories/SupremeSupplyManagement/Frontend/$' || true)
 
           if [ -n "$PIDS" ]; then
+            echo "Force stopping PIDs: $PIDS"
             kill -9 $PIDS || true
           fi
 
-          cd "$APP"
-
-          echo "Activating Node environment..."
-          source /home/sjiolccb/nodevenv/repositories/SupremeSupplyManagement/Frontend/22/bin/activate
-
-          echo "Installing production dependencies..."
-          npm install --omit=dev
-
-          echo "Replacing production build..."
-          rm -rf .next
-          tar -xzf /home/sjiolccb/supreme-next-build.tar.gz
-          rm -f /home/sjiolccb/supreme-next-build.tar.gz
-
-          echo "Verifying deployed build..."
-          test -f .next/BUILD_ID
-          find .next/static/css -type f
-
-          echo "Restarting Passenger..."
-          mkdir -p tmp
-          touch tmp/restart.txt
+          echo "Triggering Passenger restart..."
+          mkdir -p "$APP/tmp"
+          touch "$APP/tmp/restart.txt"
 
           echo "Deployment complete."
           EOF
 
-      - name: Wait for application
-        run: sleep 15
-
-      - name: Verify live website
+      - name: Verify new build is live
         run: |
-          HTML=$(curl -fsS https://supremesupply.co.za)
+          BUILD_ID=$(ssh \
+            -i ~/.ssh/supreme_deploy \
+            -p "${{ secrets.CPANEL_PORT }}" \
+            "${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}" \
+            "cat /home/sjiolccb/repositories/SupremeSupplyManagement/Frontend/.next/BUILD_ID")
 
-          CSS=$(printf '%s' "$HTML" \
-            | grep -o '/_next/static/css/[^"]*' \
-            | head -1)
+          echo "Expected build ID: $BUILD_ID"
 
-          echo "Live CSS file: $CSS"
+          for attempt in {1..12}; do
+            echo "Checking live site - attempt $attempt..."
 
-          if [ -z "$CSS" ]; then
-            echo "No CSS reference found in live HTML."
-            exit 1
-          fi
+            HTML=$(curl -fsS https://supremesupply.co.za || true)
 
-          curl -fsSI "https://supremesupply.co.za$CSS"
+            if printf '%s' "$HTML" | grep -q "$BUILD_ID"; then
+              echo "Correct build is live."
 
-          echo "Supreme Supply deployment passed."
+              CSS=$(printf '%s' "$HTML" \
+                | grep -o '/_next/static/css/[^"]*' \
+                | head -1)
+
+              echo "Live CSS: $CSS"
+
+              if [ -z "$CSS" ]; then
+                echo "No CSS file found in live HTML."
+                exit 1
+              fi
+
+              curl -fsSI "https://supremesupply.co.za$CSS"
+
+              echo "Deployment verified successfully."
+
+              # Old build is no longer needed
+              ssh \
+                -i ~/.ssh/supreme_deploy \
+                -p "${{ secrets.CPANEL_PORT }}" \
+                "${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}" \
+                "rm -rf /home/sjiolccb/repositories/SupremeSupplyManagement/Frontend/.next.old"
+
+              exit 0
+            fi
+
+            echo "Old build still responding. Waiting 5 seconds..."
+            sleep 5
+          done
+
+          echo "ERROR: cPanel contains the new build, but the live website is still serving an older build."
+          exit 1

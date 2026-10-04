@@ -58,7 +58,7 @@ export default function HomePage() {
               <p>Personalised, end-to-end logistics solutions across South Africa and international markets.</p>
               <div className="hero-actions">
                 <Link className="button button-white" href="/contact">Request a quote <ArrowRight size={16} /></Link>
-                <a className="button button-ghost-light" href="#about">Supreme at a Glance</a>
+                <a className="button button-ghost-light" href="#about">About Supreme at a Glance</a>
               </div>
             </div>
           </div>
