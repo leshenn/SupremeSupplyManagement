@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import { HeroImage } from '@/components/HeroImage';
 import { ArrowRight } from 'lucide-react';
 import { images } from '@/lib/site';
 
@@ -50,15 +50,9 @@ export default function HomePage() {
     <>
       <section className="home-hero home-hero-full">
         <div className="home-hero-stage home-hero-edge">
-          <Image
+          <HeroImage
             src="/images/home-hero.jpg"
             alt="Container terminal viewed from above"
-            fill
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            quality={90}
-            className="home-hero-image"
           />
           <div className="home-hero-shade" aria-hidden="true" />
           <div className="shell home-hero-content-wrap">
