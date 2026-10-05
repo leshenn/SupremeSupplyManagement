@@ -4,6 +4,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Chatbot } from '@/components/Chatbot';
 import { getChatbotConfig } from '@/lib/cms';
+import { PageTransition } from '@/components/PageTransition';
 
 export const metadata: Metadata = {
   title: {
@@ -20,7 +21,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang="en">
       <body>
         <Header />
-        <main>{children}</main>
+        <main>
+          <PageTransition>
+            {children}
+          </PageTransition>
+        </main>
         <Footer />
         {chatbot && <Chatbot config={chatbot} />}
       </body>
