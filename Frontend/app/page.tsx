@@ -51,7 +51,7 @@ export default function HomePage() {
       <section className="home-hero home-hero-full">
         <div className="home-hero-stage home-hero-edge">
           <Image
-            src={images.hero}
+            src="/images/home-hero.jpg"
             alt="Container terminal viewed from above"
             fill
             priority
