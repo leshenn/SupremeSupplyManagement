@@ -9,7 +9,7 @@ const wordpressUrl = (
 ).replace(/\/+$/, '');
 
 const revalidateSeconds = Number(
-  process.env.CMS_REVALIDATE_SECONDS || 60
+  process.env.CMS_REVALIDATE_SECONDS || 300
 );
 
 async function cmsFetch<T>(path: string): Promise<T | null> {
