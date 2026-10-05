@@ -12,7 +12,12 @@ const revalidateSeconds = Number(
   process.env.CMS_REVALIDATE_SECONDS || 300
 );
 
-async function cmsFetch<T>(path: string): Promise<T> {
+async function cmsFetch<T>(
+  path: string,
+  options?: {
+    allow404?: boolean;
+  }
+): Promise<T | null> {
   if (!wordpressUrl) {
     throw new Error('WORDPRESS_URL is not configured');
   }
@@ -25,6 +30,10 @@ async function cmsFetch<T>(path: string): Promise<T> {
     },
     signal: AbortSignal.timeout(30000),
   });
+
+  if (response.status === 404 && options?.allow404) {
+    return null;
+  }
 
   if (!response.ok) {
     throw new Error(
@@ -243,7 +252,8 @@ export async function getContactSettings(): Promise<ContactSettings> {
 
 export async function getChatbotConfig(): Promise<ChatbotConfig | null> {
   const remote = await cmsFetch<ChatbotConfig>(
-    '/wp-json/ssm/v1/chatbot'
+    '/wp-json/ssm/v1/chatbot',
+    { allow404: true }
   );
 
   if (
