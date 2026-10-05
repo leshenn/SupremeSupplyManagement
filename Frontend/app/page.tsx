@@ -68,7 +68,7 @@ export default function HomePage() {
       <section className="section home-about" id="about">
         <div className="shell editorial-two-col">
           <div>
-            <span className="eyebrow">About Supreme Supply</span>
+            {/*<span className="eyebrow">About Supreme Supply</span>*/}
             <h2>One point of contact for a complex supply chain.</h2>
           </div>
           <div className="body-copy">
