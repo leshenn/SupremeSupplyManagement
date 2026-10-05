@@ -12,36 +12,27 @@ const revalidateSeconds = Number(
   process.env.CMS_REVALIDATE_SECONDS || 300
 );
 
-async function cmsFetch<T>(path: string): Promise<T | null> {
+async function cmsFetch<T>(path: string): Promise<T> {
   if (!wordpressUrl) {
-    console.error('WORDPRESS_URL is not configured');
-    return null;
+    throw new Error('WORDPRESS_URL is not configured');
   }
 
-  try {
-    const response = await fetch(`${wordpressUrl}${path}`, {
-      next: {
-        revalidate: Number.isFinite(revalidateSeconds)
-          ? revalidateSeconds
-          : 300,
-      },
-      signal: AbortSignal.timeout(20000),
-    });
+  const response = await fetch(`${wordpressUrl}${path}`, {
+    next: {
+      revalidate: Number.isFinite(revalidateSeconds)
+        ? revalidateSeconds
+        : 300,
+    },
+    signal: AbortSignal.timeout(30000),
+  });
 
-    if (!response.ok) {
-      console.error(
-        `CMS request failed: ${path} (${response.status})`
-      );
-
-      return null;
-    }
-
-    return (await response.json()) as T;
-  } catch (error) {
-    console.error(`CMS request failed: ${path}`, error);
-
-    return null;
+  if (!response.ok) {
+    throw new Error(
+      `CMS request failed: ${path} (${response.status})`
+    );
   }
+
+  return (await response.json()) as T;
 }
 
 /* -------------------------------------------------------------------------- */

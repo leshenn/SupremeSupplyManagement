@@ -32,6 +32,55 @@ jobs:
         working-directory: Frontend
         run: npm ci
 
+      - name: Wait for WordPress CMS
+        run: |
+          echo "Waiting for WordPress CMS..."
+
+          ENDPOINTS=(
+            "/wp-json/ssm/v1/contact"
+            "/wp-json/ssm/v1/services"
+            "/wp-json/ssm/v1/company"
+            "/wp-json/ssm/v1/global-network"
+            "/wp-json/ssm/v1/posts?limit=1"
+          )
+
+          for endpoint in "${ENDPOINTS[@]}"; do
+            echo ""
+            echo "Checking: $endpoint"
+
+            success=false
+
+            for attempt in {1..10}; do
+              echo "Attempt $attempt of 10..."
+
+              if curl \
+                --fail \
+                --silent \
+                --show-error \
+                --max-time 30 \
+                "${WORDPRESS_URL}${endpoint}" \
+                > /dev/null
+              then
+                echo "WordPress responded successfully."
+                success=true
+                break
+              fi
+
+              echo "WordPress is not ready. Waiting 15 seconds..."
+              sleep 15
+            done
+
+            if [ "$success" != "true" ]; then
+              echo "ERROR: WordPress did not respond successfully."
+              echo "Stopping deployment so the current live website remains untouched."
+              exit 1
+            fi
+          done
+
+          echo ""
+          echo "All CMS endpoints are responding."
+          echo "Starting Next.js build..."
+      
       - name: Build Next.js
         working-directory: Frontend
         run: npm run build
