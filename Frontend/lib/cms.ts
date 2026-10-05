@@ -12,38 +12,87 @@ const revalidateSeconds = Number(
   process.env.CMS_REVALIDATE_SECONDS || 300
 );
 
+type CmsFetchOptions = {
+  allow404?: boolean;
+};
+
+const CMS_FETCH_ATTEMPTS = 3;
+const CMS_FETCH_TIMEOUT_MS = 30000;
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function cmsFetch<T>(
   path: string,
-  options?: {
-    allow404?: boolean;
-  }
+  options: CmsFetchOptions = {}
 ): Promise<T | null> {
   if (!wordpressUrl) {
     throw new Error('WORDPRESS_URL is not configured');
   }
 
-  const response = await fetch(`${wordpressUrl}${path}`, {
-    next: {
-      revalidate: Number.isFinite(revalidateSeconds)
-        ? revalidateSeconds
-        : 300,
-    },
-    signal: AbortSignal.timeout(30000),
-  });
+  for (let attempt = 1; attempt <= CMS_FETCH_ATTEMPTS; attempt++) {
+    try {
+      console.log(
+        `CMS request: ${path} - attempt ${attempt}/${CMS_FETCH_ATTEMPTS}`
+      );
 
-  if (response.status === 404 && options?.allow404) {
-    return null;
+      const response = await fetch(`${wordpressUrl}${path}`, {
+        next: {
+          revalidate: Number.isFinite(revalidateSeconds)
+            ? revalidateSeconds
+            : 300,
+        },
+        signal: AbortSignal.timeout(CMS_FETCH_TIMEOUT_MS),
+      });
+
+      // Some features such as the chatbot are optional.
+      if (response.status === 404 && options.allow404) {
+        return null;
+      }
+
+      // Don't repeatedly retry genuine client errors.
+      if (
+        response.status >= 400 &&
+        response.status < 500 &&
+        response.status !== 429
+      ) {
+        throw new Error(
+          `CMS request failed: ${path} (${response.status})`
+        );
+      }
+
+      // Retry temporary WordPress/server problems.
+      if (!response.ok) {
+        throw new Error(
+          `CMS request failed: ${path} (${response.status})`
+        );
+      }
+
+      return (await response.json()) as T;
+    } catch (error) {
+      console.error(
+        `CMS request failed: ${path} - attempt ${attempt}/${CMS_FETCH_ATTEMPTS}`,
+        error
+      );
+
+      if (attempt === CMS_FETCH_ATTEMPTS) {
+        throw error;
+      }
+
+      // Give WordPress a little time before trying again.
+      const delay = attempt * 5000;
+
+      console.log(
+        `Waiting ${delay / 1000}s before retrying ${path}...`
+      );
+
+      await wait(delay);
+    }
   }
 
-  if (!response.ok) {
-    throw new Error(
-      `CMS request failed: ${path} (${response.status})`
-    );
-  }
-
-  return (await response.json()) as T;
+  throw new Error(`CMS request failed: ${path}`);
 }
-
 /* -------------------------------------------------------------------------- */
 /*                                   TYPES                                    */
 /* -------------------------------------------------------------------------- */
