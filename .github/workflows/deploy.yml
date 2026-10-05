@@ -168,7 +168,6 @@ jobs:
           echo "Clearing runtime caches..."
 
           rm -rf "$APP/.next/server/route-cache"
-          rm -rf "$APP/.next/cache"
 
           rm -rf "$STAGE"
           rm -f "$ARCHIVE"
@@ -247,12 +246,4 @@ jobs:
           done
 
           echo "ERROR: New build exists on cPanel but is not being served."
-          exit 1
-            fi
-
-            echo "Old build still responding. Waiting 5 seconds..."
-            sleep 5
-          done
-
-          echo "ERROR: cPanel has the new build but the live site is still serving an older build."
           exit 1
