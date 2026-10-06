@@ -201,41 +201,132 @@ export function Chatbot({ config }: ChatbotProps) {
 
   // Lock the background when the chatbot is open
   useEffect(() => {
-    if (!open) return;
+  if (!open) return;
 
-    const isMobile = window.matchMedia('(max-width: 760px)').matches;
+  const isMobile = window.matchMedia(
+    '(max-width: 760px)',
+  ).matches;
 
-    if (!isMobile) return;
+  if (!isMobile) return;
 
-    const scrollY = window.scrollY;
+  const body = document.body;
+  const html = document.documentElement;
 
-    const body = document.body;
+  const previousBodyOverflow = body.style.overflow;
+  const previousHtmlOverflow = html.style.overflow;
 
-    const previousPosition = body.style.position;
-    const previousTop = body.style.top;
-    const previousLeft = body.style.left;
-    const previousRight = body.style.right;
-    const previousWidth = body.style.width;
-    const previousOverflow = body.style.overflow;
+  const previousBodyOverscroll =
+    body.style.overscrollBehavior;
+  const previousHtmlOverscroll =
+    html.style.overscrollBehavior;
 
-    body.style.position = 'fixed';
-    body.style.top = `-${scrollY}px`;
-    body.style.left = '0';
-    body.style.right = '0';
-    body.style.width = '100%';
-    body.style.overflow = 'hidden';
+  /*
+   * Lock the page without changing its position.
+   * This avoids the up/down jump caused by position: fixed.
+   */
+  body.style.overflow = 'hidden';
+  html.style.overflow = 'hidden';
 
-    return () => {
-      body.style.position = previousPosition;
-      body.style.top = previousTop;
-      body.style.left = previousLeft;
-      body.style.right = previousRight;
-      body.style.width = previousWidth;
-      body.style.overflow = previousOverflow;
+  body.style.overscrollBehavior = 'none';
+  html.style.overscrollBehavior = 'none';
 
-      window.scrollTo(0, scrollY);
-    };
-  }, [open]);
+  let touchStartY = 0;
+
+  const handleTouchStart = (
+    event: TouchEvent,
+  ) => {
+    touchStartY =
+      event.touches[0]?.clientY ?? 0;
+  };
+
+  const handleTouchMove = (
+    event: TouchEvent,
+  ) => {
+    const target =
+      event.target instanceof HTMLElement
+        ? event.target
+        : null;
+
+    const scrollArea =
+      target?.closest(
+        '.ssm-chatbot-body',
+      ) as HTMLElement | null;
+
+    /*
+     * If the touch is outside the chatbot's
+     * scrollable area, don't allow the page
+     * behind it to move.
+     */
+    if (!scrollArea) {
+      event.preventDefault();
+      return;
+    }
+
+    const currentY =
+      event.touches[0]?.clientY ??
+      touchStartY;
+
+    const deltaY =
+      currentY - touchStartY;
+
+    const atTop =
+      scrollArea.scrollTop <= 0;
+
+    const atBottom =
+      Math.ceil(
+        scrollArea.scrollTop +
+          scrollArea.clientHeight,
+      ) >= scrollArea.scrollHeight;
+
+    /*
+     * Stop the scroll from "escaping"
+     * the chatbot when the user reaches
+     * the top or bottom.
+     */
+    if (
+      (atTop && deltaY > 0) ||
+      (atBottom && deltaY < 0)
+    ) {
+      event.preventDefault();
+    }
+  };
+
+  document.addEventListener(
+    'touchstart',
+    handleTouchStart,
+    { passive: true },
+  );
+
+  document.addEventListener(
+    'touchmove',
+    handleTouchMove,
+    { passive: false },
+  );
+
+  return () => {
+    body.style.overflow =
+      previousBodyOverflow;
+
+    html.style.overflow =
+      previousHtmlOverflow;
+
+    body.style.overscrollBehavior =
+      previousBodyOverscroll;
+
+    html.style.overscrollBehavior =
+      previousHtmlOverscroll;
+
+    document.removeEventListener(
+      'touchstart',
+      handleTouchStart,
+    );
+
+    document.removeEventListener(
+      'touchmove',
+      handleTouchMove,
+    );
+  };
+}, [open]);
 
   /*
    * Changing this key forces the content view to remount.
