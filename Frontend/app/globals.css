@@ -3604,3 +3604,788 @@ li {
 .home-hero-image.is-loaded {
   opacity: 1;
 }
+
+/* ============================================================
+   CHATBOT — dynamic website content layout refinement
+   ============================================================ */
+
+
+/* Remove the glow/shadow behind the chatbot logo */
+.ssm-chatbot-launcher {
+  box-shadow: none !important;
+
+  transition:
+    transform .2s ease,
+    background .2s ease;
+}
+
+.ssm-chatbot-launcher:hover {
+  box-shadow: none !important;
+}
+
+
+/* Give website content a little more room */
+.ssm-chatbot-panel {
+  width: min(420px, calc(100vw - 32px));
+  max-height: min(680px, calc(100vh - 110px));
+}
+
+
+/* Slightly more breathing room inside */
+.ssm-chatbot-body {
+  max-height: calc(min(680px, calc(100vh - 110px)) - 78px);
+  padding: 20px;
+}
+
+
+/* Main response card */
+.ssm-chatbot-message {
+  padding: 18px;
+
+  border-radius: 14px;
+  background: white;
+
+  /* softer card — no unnecessary glow */
+  box-shadow: 0 4px 14px rgba(15, 36, 76, .04);
+}
+
+
+/* Main chatbot heading */
+.ssm-chatbot-message > strong {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: var(--blue);
+
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.18;
+}
+
+
+/* Override the site's large 18px body copy inside chatbot */
+.ssm-chatbot-message > p,
+.ssm-chatbot-response p,
+.ssm-chatbot-response li {
+  color: #667085;
+
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.6 !important;
+}
+
+
+/* Paragraph spacing */
+.ssm-chatbot-response p {
+  margin: 0 0 12px;
+}
+
+.ssm-chatbot-response p:first-child {
+  margin-top: 8px;
+}
+
+.ssm-chatbot-response p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* If WordPress content contains headings */
+.ssm-chatbot-response h2,
+.ssm-chatbot-response h3,
+.ssm-chatbot-response h4 {
+  margin: 18px 0 8px;
+
+  color: var(--blue);
+
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.ssm-chatbot-response h2 {
+  font-size: 20px;
+}
+
+.ssm-chatbot-response h3 {
+  font-size: 18px;
+}
+
+.ssm-chatbot-response h4 {
+  font-size: 16px;
+}
+
+
+/* Proper list formatting for service capabilities */
+.ssm-chatbot-response ul,
+.ssm-chatbot-response ol {
+  margin: 12px 0 4px;
+  padding-left: 20px;
+}
+
+.ssm-chatbot-response li {
+  margin-bottom: 6px;
+}
+
+.ssm-chatbot-response li:last-child {
+  margin-bottom: 0;
+}
+
+
+/* Links inside WordPress content */
+.ssm-chatbot-response a {
+  color: var(--blue);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+
+/* Selected option label */
+.ssm-chatbot-selected {
+  margin-bottom: 7px;
+
+  color: #8a94a4;
+
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: .12em;
+
+  text-transform: uppercase;
+}
+
+
+/* Action link below an answer */
+.ssm-chatbot-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-top: 16px;
+
+  color: var(--blue);
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* Main chatbot menu */
+.ssm-chatbot-options {
+  display: grid;
+  gap: 9px;
+
+  margin-top: 14px;
+}
+
+
+/* Each selectable option */
+.ssm-chatbot-options button {
+  width: 100%;
+  min-height: 48px;
+
+  padding: 12px 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: white;
+  color: var(--ink);
+
+  box-shadow: none;
+
+  cursor: pointer;
+  text-align: left;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+
+  transition:
+    transform .18s ease,
+    background .18s ease,
+    color .18s ease;
+}
+
+.ssm-chatbot-options button:hover {
+  transform: translateX(2px);
+
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+
+/* Arrow / chevron */
+.ssm-chatbot-options button span:last-child {
+  flex: 0 0 auto;
+
+  color: var(--blue);
+  font-size: 14px;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+  .ssm-chatbot-panel {
+    width: calc(100vw - 24px);
+
+    max-height: min(76vh, 620px);
+
+    border-radius: 16px;
+  }
+
+  .ssm-chatbot-body {
+    max-height: calc(min(76vh, 620px) - 78px);
+
+    padding: 16px;
+  }
+
+  .ssm-chatbot-message {
+    padding: 16px;
+  }
+
+  .ssm-chatbot-message > strong {
+    font-size: 20px;
+  }
+
+  .ssm-chatbot-message > p,
+  .ssm-chatbot-response p,
+  .ssm-chatbot-response li {
+    font-size: 13.5px !important;
+    line-height: 1.58 !important;
+  }
+
+  .ssm-chatbot-options button {
+    min-height: 46px;
+
+    padding: 11px 13px;
+
+    font-size: 13px;
+  }
+}
+
+/* ============================================================
+   CHATBOT MOTION
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   Launcher
+   ------------------------------------------------------------ */
+
+.ssm-chatbot-launcher {
+  box-shadow: none !important;
+
+  transform: translateY(0) scale(1);
+
+  transition:
+    transform .32s cubic-bezier(.22, 1, .36, 1),
+    background-color .25s ease;
+}
+
+.ssm-chatbot-launcher:hover {
+  box-shadow: none !important;
+
+  transform: translateY(-3px) scale(1.04);
+}
+
+.ssm-chatbot-launcher:active {
+  transform: translateY(0) scale(.92);
+
+  transition-duration: .1s;
+}
+
+
+/* Icon inside launcher */
+
+.ssm-chatbot-launcher svg {
+  transition:
+    transform .35s cubic-bezier(.22, 1, .36, 1);
+}
+
+.ssm-chatbot-launcher:hover svg {
+  transform: scale(1.08);
+}
+
+
+/* ------------------------------------------------------------
+   Panel opening
+   ------------------------------------------------------------ */
+
+.ssm-chatbot-panel {
+  transform-origin: bottom right;
+
+  animation:
+    ssm-chatbot-open .46s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+@keyframes ssm-chatbot-open {
+
+  0% {
+    opacity: 0;
+
+    transform:
+      translateY(18px)
+      scale(.94);
+
+    filter: blur(6px);
+  }
+
+  55% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+
+    filter: blur(0);
+  }
+}
+
+
+/* ------------------------------------------------------------
+   Panel closing
+   Used once we add the closing class in Chatbot.tsx
+   ------------------------------------------------------------ */
+
+.ssm-chatbot-panel.is-closing {
+  pointer-events: none;
+
+  animation:
+    ssm-chatbot-close .28s cubic-bezier(.4, 0, 1, 1) both;
+}
+
+@keyframes ssm-chatbot-close {
+
+  from {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 0;
+
+    transform:
+      translateY(12px)
+      scale(.96);
+
+    filter: blur(4px);
+  }
+}
+
+
+/* ------------------------------------------------------------
+   Header appears after panel begins opening
+   ------------------------------------------------------------ */
+
+.ssm-chatbot-head {
+  animation:
+    ssm-chatbot-head-in .45s .06s
+    cubic-bezier(.22, 1, .36, 1)
+    both;
+}
+
+@keyframes ssm-chatbot-head-in {
+
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ------------------------------------------------------------
+   Close button
+   ------------------------------------------------------------ */
+
+.ssm-chatbot-close {
+  transition:
+    transform .3s cubic-bezier(.22, 1, .36, 1),
+    background-color .2s ease,
+    border-color .2s ease;
+}
+
+.ssm-chatbot-close:hover {
+  transform: rotate(90deg) scale(1.05);
+
+  background: rgba(255, 255, 255, .1);
+
+  border-color: rgba(255, 255, 255, .4);
+}
+
+.ssm-chatbot-close:active {
+  transform: rotate(90deg) scale(.88);
+
+  transition-duration: .1s;
+}
+
+
+/* ------------------------------------------------------------
+   Main message
+   ------------------------------------------------------------ */
+
+.ssm-chatbot-message {
+  animation:
+    ssm-chatbot-message-in .48s .08s
+    cubic-bezier(.22, 1, .36, 1)
+    both;
+}
+
+@keyframes ssm-chatbot-message-in {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(10px);
+
+    filter: blur(3px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+
+    filter: blur(0);
+  }
+}
+
+
+/* ------------------------------------------------------------
+   Option buttons
+   ------------------------------------------------------------ */
+
+.ssm-chatbot-options button {
+  opacity: 0;
+
+  transform: translateY(8px);
+
+  animation:
+    ssm-chatbot-option-in .42s
+    cubic-bezier(.22, 1, .36, 1)
+    forwards;
+
+  transition:
+    transform .25s cubic-bezier(.22, 1, .36, 1),
+    background-color .2s ease,
+    color .2s ease;
+}
+
+
+/* Small stagger */
+
+.ssm-chatbot-options button:nth-child(1) {
+  animation-delay: .10s;
+}
+
+.ssm-chatbot-options button:nth-child(2) {
+  animation-delay: .14s;
+}
+
+.ssm-chatbot-options button:nth-child(3) {
+  animation-delay: .18s;
+}
+
+.ssm-chatbot-options button:nth-child(4) {
+  animation-delay: .22s;
+}
+
+.ssm-chatbot-options button:nth-child(5) {
+  animation-delay: .26s;
+}
+
+.ssm-chatbot-options button:nth-child(6) {
+  animation-delay: .30s;
+}
+
+.ssm-chatbot-options button:nth-child(n + 7) {
+  animation-delay: .34s;
+}
+
+
+@keyframes ssm-chatbot-option-in {
+
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Button hover */
+
+.ssm-chatbot-options button:hover {
+  transform: translateX(4px);
+
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+
+/* Physical click feeling */
+
+.ssm-chatbot-options button:active {
+  transform:
+    translateX(2px)
+    scale(.975);
+
+  transition-duration: .08s;
+}
+
+
+/* Animate arrow independently */
+
+.ssm-chatbot-options button span:last-child {
+  transition:
+    transform .28s cubic-bezier(.22, 1, .36, 1);
+}
+
+.ssm-chatbot-options button:hover span:last-child {
+  transform: translateX(3px);
+}
+
+
+/* ------------------------------------------------------------
+   New response after clicking an option
+   ------------------------------------------------------------ */
+
+.ssm-chatbot-response {
+  animation:
+    ssm-chatbot-response-in .42s
+    cubic-bezier(.22, 1, .36, 1)
+    both;
+}
+
+@keyframes ssm-chatbot-response-in {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(8px);
+
+    filter: blur(2px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+
+    filter: blur(0);
+  }
+}
+
+
+/* ------------------------------------------------------------
+   Back / Start over
+   ------------------------------------------------------------ */
+
+.ssm-chatbot-back,
+.ssm-chatbot-start-over {
+  transition:
+    transform .22s cubic-bezier(.22, 1, .36, 1),
+    opacity .2s ease;
+}
+
+.ssm-chatbot-back:hover {
+  transform: translateX(-3px);
+}
+
+.ssm-chatbot-start-over:hover {
+  transform: translateY(-2px);
+}
+
+.ssm-chatbot-back:active,
+.ssm-chatbot-start-over:active {
+  transform: scale(.95);
+}
+
+
+/* ------------------------------------------------------------
+   Action links such as View Service
+   ------------------------------------------------------------ */
+
+.ssm-chatbot-action {
+  transition:
+    transform .25s cubic-bezier(.22, 1, .36, 1),
+    opacity .2s ease;
+}
+
+.ssm-chatbot-action:hover {
+  transform: translateX(4px);
+}
+
+.ssm-chatbot-action:active {
+  transform:
+    translateX(2px)
+    scale(.97);
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 760px) {
+
+  .ssm-chatbot-panel {
+    transform-origin: bottom center;
+
+    animation-duration: .38s;
+  }
+
+  @keyframes ssm-chatbot-open {
+
+    0% {
+      opacity: 0;
+
+      transform:
+        translateY(24px)
+        scale(.97);
+    }
+
+    100% {
+      opacity: 1;
+
+      transform:
+        translateY(0)
+        scale(1);
+    }
+  }
+
+  .ssm-chatbot-options button:hover {
+    transform: none;
+  }
+
+  .ssm-chatbot-options button:active {
+    transform: scale(.97);
+  }
+}
+
+
+/* ============================================================
+   ACCESSIBILITY
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .ssm-chatbot-panel,
+  .ssm-chatbot-head,
+  .ssm-chatbot-message,
+  .ssm-chatbot-response,
+  .ssm-chatbot-options button,
+  .ssm-chatbot-launcher,
+  .ssm-chatbot-launcher svg,
+  .ssm-chatbot-close,
+  .ssm-chatbot-back,
+  .ssm-chatbot-start-over,
+  .ssm-chatbot-action {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ============================================================
+   CHATBOT VIEW TRANSITIONS
+   Runs whenever the user navigates to another chatbot screen
+   ============================================================ */
+
+.ssm-chatbot-view {
+  animation:
+    ssm-chatbot-view-in .42s
+    cubic-bezier(.22, 1, .36, 1)
+    both;
+}
+
+@keyframes ssm-chatbot-view-in {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+    filter: blur(2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+
+/* Back button gently appears separately */
+
+.ssm-chatbot-back {
+  animation:
+    ssm-chatbot-back-in .3s
+    cubic-bezier(.22, 1, .36, 1)
+    both;
+}
+
+@keyframes ssm-chatbot-back-in {
+  from {
+    opacity: 0;
+    transform: translateX(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+/* Make clicking links/buttons feel physical */
+
+.ssm-chatbot-action:active,
+.ssm-chatbot-back:active,
+.ssm-chatbot-start-over:active {
+  transform: scale(.96);
+}
+
+
+/* Remove motion for users who request it */
+
+@media (prefers-reduced-motion: reduce) {
+  .ssm-chatbot-view,
+  .ssm-chatbot-back {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
