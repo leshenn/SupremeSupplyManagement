@@ -4389,3 +4389,10 @@ li {
     opacity: 1 !important;
   }
 }
+
+.ssm-chatbot-body {
+  overflow-y: auto;
+
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}

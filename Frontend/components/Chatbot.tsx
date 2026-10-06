@@ -198,6 +198,45 @@ export function Chatbot({ config }: ChatbotProps) {
     return null;
   }
 
+
+  // Lock the background when the chatbot is open
+  useEffect(() => {
+    if (!open) return;
+
+    const isMobile = window.matchMedia('(max-width: 760px)').matches;
+
+    if (!isMobile) return;
+
+    const scrollY = window.scrollY;
+
+    const body = document.body;
+
+    const previousPosition = body.style.position;
+    const previousTop = body.style.top;
+    const previousLeft = body.style.left;
+    const previousRight = body.style.right;
+    const previousWidth = body.style.width;
+    const previousOverflow = body.style.overflow;
+
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}px`;
+    body.style.left = '0';
+    body.style.right = '0';
+    body.style.width = '100%';
+    body.style.overflow = 'hidden';
+
+    return () => {
+      body.style.position = previousPosition;
+      body.style.top = previousTop;
+      body.style.left = previousLeft;
+      body.style.right = previousRight;
+      body.style.width = previousWidth;
+      body.style.overflow = previousOverflow;
+
+      window.scrollTo(0, scrollY);
+    };
+  }, [open]);
+
   /*
    * Changing this key forces the content view to remount.
    *
